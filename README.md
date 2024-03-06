@@ -344,7 +344,7 @@
 </picture>
 
 <p align="right">
-<img align="center" src="https://user-images.githubusercontent.com/74038190/218265814-3084a4ba-809c-4135-afc0-8685d0f634b3.gif" alt="developer" height="200" width="200" />
+<img align="center" src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*odem0hTTh93G1COZwziCNw.gif" alt="developer" style="width: 100%" rel="https://medium.com/@netiquettewebservices001/drupal-cms-is-it-best-for-web-development-5f3c440fc5f2" />
 </p>
 
 <h2 align="left">Connect with me:</h2>
