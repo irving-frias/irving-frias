@@ -343,7 +343,7 @@
   <img alt="github contribution grid snake animation" src="https://raw.githubusercontent.com/platane/platane/output/github-contribution-grid-snake.svg">
 </picture>
 
-<p align="right">
+<p align="right" style="display: flex; flex-direction: row; justify-content: center; align-items: center;">
 <img align="center" src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*odem0hTTh93G1COZwziCNw.gif" alt="developer" style="width: 100%" rel="https://medium.com/@netiquettewebservices001/drupal-cms-is-it-best-for-web-development-5f3c440fc5f2" />
 </p>
 
