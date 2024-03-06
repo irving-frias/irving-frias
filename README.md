@@ -254,6 +254,9 @@
 <table>
   <tr>
     <th>
+      <h3 align="center">*-Shell Scripting-*</h3>
+    </th>
+    <th>
       <h3 align="center">*-Task Runner-*</h3>
     </th>
     <th>
@@ -264,11 +267,26 @@
     <td>
       <table>
         <tr>
+          <th>Shell Script</th>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/irving-frias/drupal_watcher" target="_blank" rel="noreferrer">
+              <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/bash/bash-plain.svg" alt="Shell Script"
+                width="40" height="40" />
+            </a>
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td>
+      <table>
+        <tr>
           <th>Gulp</th>
         </tr>
         <tr>
           <td>
-            <a href="https://gulpjs.com" target="_blank" rel="noreferrer">
+            <a href="https://github.com/irving-frias/frontend-gulp-starter-kit" target="_blank" rel="noreferrer">
               <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/gulp/gulp-plain.svg" alt="gulp"
                 width="40" height="40" />
             </a>
