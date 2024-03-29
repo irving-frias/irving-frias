@@ -5,3 +5,5 @@
 /*.html
 /dist
 /logs
+# Local Netlify folder
+.netlify

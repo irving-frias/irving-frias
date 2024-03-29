@@ -45,6 +45,7 @@
   },
   "devDependencies": {
     "gulp-gh-pages": "^0.5.4",
-    "gulp-shell": "^0.8.0"
+    "gulp-shell": "^0.8.0",
+    "netlify-cli": "^17.21.1"
   }
 }
