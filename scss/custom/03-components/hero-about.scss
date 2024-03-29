@@ -66,15 +66,29 @@
 @include media-breakpoint-up(md) {
   .hero-about{
     height: 80vh;
+    position: relative;
+    overflow: hidden;
 
     .container-fluid{
       .row{
         .title{
-          
+          .title-wrapper{
+            width: 600%;
+            transform: rotate(-90deg);
+            left: -250%;
+            position: absolute;
+            bottom: 50%;
+          }
         }
 
         .description{
-          
+          .description-wrapper{
+            width: 600%;
+            transform: rotate(-90deg);
+            left: -250%;
+            position: absolute;
+            bottom: 50%;
+          }
         }
 
         .image{

@@ -1,4 +1,4 @@
-<header class="position-sticky top-0 z-100">
+<header class="position-sticky top-0 z-2">
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
       <a class="navbar-brand" href="/">Irving Frias</a>
