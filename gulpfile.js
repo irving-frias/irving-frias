@@ -92,10 +92,26 @@ gulp.task('run_shell_script', shell.task([
   'sh generate.sh'
 ]));
 
-gulp.task('copy-folder', function() {
+gulp.task('copy-assets', function() {
   return gulp.src('assets/**/*') // Select all files and subdirectories in the source folder
     .pipe(gulp.dest('dist/assets')); // Copy to the destination folder
 });
+
+gulp.task('copy-css', function() {
+  return gulp.src('css/**/*') // Select all files and subdirectories in the source folder
+    .pipe(gulp.dest('dist/css')); // Copy to the destination folder
+});
+
+gulp.task('copy-js', function() {
+  return gulp.src('css/**/*') // Select all files and subdirectories in the source folder
+    .pipe(gulp.dest('dist/js')); // Copy to the destination folder
+});
+
+gulp.task('copy-htaccess', function() {
+  return gulp.src('.htaccess') // Select all files and subdirectories in the source folder
+    .pipe(gulp.dest('dist/')); // Copy to the destination folder
+});
+
 
 gulp.task('build', gulp.series([
   'sass',
@@ -103,7 +119,10 @@ gulp.task('build', gulp.series([
   'js',
   'js_min',
   'twig',
-  'copy-folder',
+  'copy-assets',
+  'copy-css',
+  'copy-js',
+  'copy-htaccess',
   'run_shell_script'
 ]));
 
