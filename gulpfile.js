@@ -100,7 +100,10 @@ gulp.task('build', gulp.series([
  */
 gulp.task('deploy', function () {
   return gulp.src("./*")
-    .pipe(build())
+    .pipe(deploy({
+      remoteUrl: "git@github.com:irving-frias/irving-frias.git",
+      branch: "main"
+    }))
 });
 
 gulp.task('default', gulp.series(['watch']));
