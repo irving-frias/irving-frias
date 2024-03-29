@@ -71,7 +71,7 @@ gulp.task('twig', async function () {
   gulp.src(['./templates/pages/*.html'])
     .pipe(twig())
     .pipe(htmlbeautify(htmlbeautify_options))
-    .pipe(gulp.dest('./'));
+    .pipe(gulp.dest('./dist/'));
 });
 
 gulp.task('js', function () {
@@ -106,7 +106,7 @@ gulp.task('build', gulp.series([
  * Push build to gh-pages
  */
 gulp.task('deploy_gh', function () {
-  return gulp.src("./dist/**/*")
+  return gulp.src("./dist/")
     .pipe(deploy({
       remoteUrl: "git@github.com:irving-frias/irving-frias.git",
       branch: "main"
