@@ -8,6 +8,7 @@ var uglify            = require('gulp-uglify');
 var w3cValidation     = require('gulp-w3c-html-validation');
 var twig              = require('gulp-twig');
 var htmlbeautify      = require('gulp-html-beautify');
+var deploy            = require('gulp-gh-pages');
 
 // Global options.
 var htmlbeautify_options = {
@@ -92,5 +93,14 @@ gulp.task('build', gulp.series([
   'js_min',
   'twig'
 ]));
+
+
+/**
+ * Push build to gh-pages
+ */
+gulp.task('deploy', function () {
+  return gulp.src("./*")
+    .pipe(build())
+});
 
 gulp.task('default', gulp.series(['watch']));
