@@ -9,6 +9,7 @@ var w3cValidation     = require('gulp-w3c-html-validation');
 var twig              = require('gulp-twig');
 var htmlbeautify      = require('gulp-html-beautify');
 var deploy            = require('gulp-gh-pages');
+var shell             = require('gulp-shell');
 
 // Global options.
 var htmlbeautify_options = {
@@ -22,7 +23,7 @@ var js_scripts_contrib = [
 ];
 
 var js_scripts_custom = [
-  './js-src/test.js'
+  './js-src/theme-mode.js'
 ];
 
 gulp.task('sass', function () {
@@ -86,24 +87,45 @@ gulp.task('js_min', function () {
     .pipe(gulp.dest('./js/'));
 });
 
+// Define a Gulp task to run the shell script
+gulp.task('run_shell_script', shell.task([
+  'sh generate.sh'
+]));
+
 gulp.task('build', gulp.series([
   'sass',
   'css_min',
   'js',
   'js_min',
-  'twig'
+  'twig',
+  'run_shell_script'
 ]));
 
 
 /**
  * Push build to gh-pages
  */
-gulp.task('deploy', function () {
-  return gulp.src("./*")
+gulp.task('deploy_gh', function () {
+  return gulp.src("./dist/**/*")
     .pipe(deploy({
       remoteUrl: "git@github.com:irving-frias/irving-frias.git",
       branch: "main"
     }))
+});
+
+gulp.task('deploy', gulp.series([
+  'run_shell_script',
+  'deploy_gh'
+]));
+
+gulp.task('watch', function () {
+  gulp.watch([
+      './scss/*.scss',
+      './scss/**/*.scss',
+      './templates/*',
+      './templates/**/*',
+      './js-src/*.js'
+    ], gulp.series(['build']));
 });
 
 gulp.task('default', gulp.series(['watch']));
