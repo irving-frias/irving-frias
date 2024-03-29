@@ -1,6 +1,4 @@
 #!/bin/bash
-
-rm -rf dist
 mkdir -p dist
 
 cp -r ./assets dist/assets
