@@ -92,15 +92,20 @@ gulp.task('run_shell_script', shell.task([
   'sh generate.sh'
 ]));
 
+gulp.task('copy-folder', function() {
+  return gulp.src('assets/**/*') // Select all files and subdirectories in the source folder
+    .pipe(gulp.dest('dist/assets')); // Copy to the destination folder
+});
+
 gulp.task('build', gulp.series([
   'sass',
   'css_min',
   'js',
   'js_min',
   'twig',
+  'copy-folder',
   'run_shell_script'
 ]));
-
 
 /**
  * Push build to gh-pages
