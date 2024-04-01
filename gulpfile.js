@@ -10,6 +10,8 @@ var twig              = require('gulp-twig');
 var htmlbeautify      = require('gulp-html-beautify');
 var deploy            = require('gulp-gh-pages');
 var shell             = require('gulp-shell');
+var i18nExtract       = require('gulp-i18n-extract');
+const fs              = require('fs');
 
 // Global options.
 var htmlbeautify_options = {
@@ -23,7 +25,8 @@ var js_scripts_contrib = [
 ];
 
 var js_scripts_custom = [
-  './js-src/theme-mode.js'
+  './js-src/theme-mode.js',
+  './js-src/language-toggle.js'
 ];
 
 gulp.task('sass', function () {
@@ -67,12 +70,81 @@ gulp.task('watch', function () {
     ], gulp.series(['build-dev']));
 });
 
-gulp.task('twig', async function () {
-  gulp.src(['./templates/pages/*.html'])
-    .pipe(twig())
-    .pipe(htmlbeautify(htmlbeautify_options))
-    .pipe(gulp.dest('./dist/'));
+
+function translate(text, lang) {
+  // Define your translations here
+  const data = fs.readFileSync('translations.json', 'utf8');
+  const translations = JSON.parse(data);
+
+  // Check if translation exists for the given language
+  if (translations[text] && translations[text][lang]) {
+      return translations[text][lang];
+  } else {
+      // Return original text if translation not found
+      return text;
+  }
+}
+
+function reverse_url(text, lang) {
+  const data = fs.readFileSync('reverse_urls.json', 'utf8');
+  const translations = JSON.parse(data);
+
+  // Check if translation exists for the given language
+  if (translations[text] && translations[text][lang]) {
+    return translations[text][lang];
+  } else {
+      // Return original text if translation not found
+      return text;
+  }
+}
+
+// Task to compile Twig files with translation
+gulp.task('twig', function () {
+  return gulp.src(['./templates/pages/*.html', '!./templates/pages/es/*.html'])
+      .pipe(twig({
+          functions: [
+              {
+                  name: 'translate', // Name of the translation function
+                  func: function(text) {
+                      return translate(text, 'en'); // Translate to English by default
+                  }
+              },
+              {
+                name: 'reverse_url', // Name of the translation function
+                func: function(text) {
+                    return reverse_url(text, 'en'); // Translate to English
+                }
+            }
+          ]
+      }))
+      .pipe(htmlbeautify(htmlbeautify_options))
+      .pipe(gulp.dest('./dist/'));
 });
+
+// Task to compile Twig files with Spanish translation
+gulp.task('twig-es', function () {
+  return gulp.src(['./templates/pages/es/*.html'])
+      .pipe(twig({
+          functions: [
+              {
+                  name: 'translate', // Name of the translation function
+                  func: function(text) {
+                      return translate(text, 'es'); // Translate to Spanish
+                  }
+              },
+              {
+                  name: 'reverse_url', // Name of the translation function
+                  func: function(text) {
+                      return reverse_url(text, 'es'); // Translate to English
+                  }
+              }
+          ]
+      }))
+      .pipe(htmlbeautify(htmlbeautify_options))
+      .pipe(gulp.dest('./dist/es/'));
+});
+
+
 
 gulp.task('js', function () {
   return gulp.src([...js_scripts_contrib, ...js_scripts_custom])
@@ -103,7 +175,7 @@ gulp.task('copy-css', function() {
 });
 
 gulp.task('copy-js', function() {
-  return gulp.src('css/**/*') // Select all files and subdirectories in the source folder
+  return gulp.src('js/**/*') // Select all files and subdirectories in the source folder
     .pipe(gulp.dest('dist/js')); // Copy to the destination folder
 });
 
@@ -119,6 +191,7 @@ gulp.task('build', gulp.series([
   'js',
   'js_min',
   'twig',
+  'twig-es',
   'copy-assets',
   'copy-css',
   'copy-js',

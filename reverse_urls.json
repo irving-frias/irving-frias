@@ -1,0 +1,22 @@
+{
+  "/about": {
+    "es": "/about",
+    "en": "/es/acerca-de"
+  },
+  "/": {
+    "es": "/",
+    "en": "/es"
+  },
+  "/features": {
+    "es": "/features",
+    "en": "/es/caracteristicas"
+  },
+  "/pricing": {
+    "es": "/pricing",
+    "en": "/es/precios"
+  },
+  "/faqs": {
+    "es": "/faqs",
+    "en": "/es/preguntas-frecuentes"
+  }
+}

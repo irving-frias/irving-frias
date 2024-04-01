@@ -1,4 +1,12 @@
 RewriteEngine On
+
+# Redirect /es/example-es.html to /es/example
+RewriteRule ^es/(.+)_es\.html$ /es/$1 [R=301,L]
+
+# Set index file for /es directory
+DirectoryIndex index_es.html index.html
+
+# Rewrite non-existent directories to add .html extension
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}\.html -f
 RewriteRule ^(.*)$ $1.html [L]
