@@ -13,6 +13,92 @@ var shell             = require('gulp-shell');
 var i18nExtract       = require('gulp-i18n-extract');
 const fs              = require('fs');
 const path            = require('path');
+const puppeteer       = require('puppeteer');
+
+//registerFont('assets/fonts/tacobox.ttf', { family: 'tacobox' });
+
+process.setMaxListeners(15);
+
+// Function to extract page title from HTML content without using a library
+function extractPageTitle(htmlContent) {
+  // Find the index of the opening <title> tag
+  const titleStartIndex = htmlContent.indexOf('<title>');
+  if (titleStartIndex === -1) {
+      return ''; // If <title> tag not found, return an empty string
+  }
+
+  // Find the index of the closing </title> tag
+  const titleEndIndex = htmlContent.indexOf('</title>', titleStartIndex);
+  if (titleEndIndex === -1) {
+      return ''; // If </title> tag not found, return an empty string
+  }
+
+  // Extract the title text between the <title> and </title> tags
+  const title = htmlContent.substring(titleStartIndex + 7, titleEndIndex); // Add 7 to skip over '<title>'
+  return title.trim(); // Trim any leading or trailing whitespace
+}
+
+// Function to generate OG image
+async function generateOGImage(text, folder, file) {
+  // Launch headless browser
+
+  // Check if the file exists
+  fs.access(`${folder}/${file}`, fs.constants.F_OK, (err) => {
+    if (!err) {
+      console.log(`File ${file} already exists. Skipping...`);
+      return;
+    }
+  });
+
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+
+  if (!fs.existsSync(folder)) {
+    fs.mkdirSync(folder, { recursive: true });
+  }
+
+  // Set viewport size
+  await page.setViewport({ width: 1200, height: 630 });
+
+  // Navigate to a blank HTML page
+  await page.setContent(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>OG Image</title>
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+                display: flex;
+                align-items: center; /* Center vertically */
+                justify-content: center; /* Center horizontally */
+                width: 100%;
+                height: 100%;
+                background-color: #007bff; /* Example background color */
+                color: #ffffff; /* Example text color */
+                font-family: Arial, sans-serif; /* Example font family */
+                font-size: 48px; /* Example font size */
+                text-align: center;
+                line-height: 1.5;
+                height: 100vh;
+            }
+        </style>
+    </head>
+    <body>
+      ${text}
+    </body>
+    </html>
+  `);
+
+  // Capture screenshot and save as PNG
+  await page.screenshot({ path: `${folder}/${file}`, type: 'png' });
+
+  // Close browser
+  await browser.close();
+}
+
 
 // Global options.
 var htmlbeautify_options = {
@@ -119,7 +205,17 @@ gulp.task('twig', function () {
           ]
       }))
       .pipe(htmlbeautify(htmlbeautify_options))
-      .pipe(gulp.dest('./dist/'));
+      .pipe(gulp.dest('./dist/'))
+      .on('end', function() {
+        // After processing, read the files in the destination directory and extract page titles
+        fs.readdirSync('./dist/').forEach(file => {
+          if (file.endsWith('.html')) {
+            const content = fs.readFileSync(path.join('./dist/', file), 'utf8');
+            const pageTitle = extractPageTitle(content);
+            generateOGImage(pageTitle, './assets/pages/en/', file.replace('.html', '.png'));
+          }
+        })
+      });
 });
 
 // Task to compile Twig files with Spanish translation
@@ -142,7 +238,17 @@ gulp.task('twig-es', function () {
           ]
       }))
       .pipe(htmlbeautify(htmlbeautify_options))
-      .pipe(gulp.dest('./dist/es/'));
+      .pipe(gulp.dest('./dist/es/'))
+      .on('end', function() {
+        // After processing, read the files in the destination directory and extract page titles
+        fs.readdirSync('./dist/es/').forEach(file => {
+          if (file.endsWith('.html')) {
+            const content = fs.readFileSync(path.join('./dist/es/', file), 'utf8');
+            const pageTitle = extractPageTitle(content);
+            generateOGImage(pageTitle, './assets/pages/es/', file.replace('.html', '.png'));
+          }
+        })
+      });
 });
 
 // Task to compile Twig files for posts
