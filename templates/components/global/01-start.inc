@@ -1,6 +1,6 @@
 
 <!DOCTYPE html>
-<html lang="{{ translate('en', 'es') }}" class="h-100" data-bs-theme="dark">
+<html lang="{{ translate('en', 'es') }}" class="h-100" data-bs-theme="dark" data-slug-en="{{ slug_en }}" data-slug-es="{{ slug_es }}">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">

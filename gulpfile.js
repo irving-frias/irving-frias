@@ -12,6 +12,7 @@ var deploy            = require('gulp-gh-pages');
 var shell             = require('gulp-shell');
 var i18nExtract       = require('gulp-i18n-extract');
 const fs              = require('fs');
+const path            = require('path');
 
 // Global options.
 var htmlbeautify_options = {
@@ -100,7 +101,7 @@ function reverse_url(text, lang) {
 
 // Task to compile Twig files with translation
 gulp.task('twig', function () {
-  return gulp.src(['./templates/pages/*.html', '!./templates/pages/es/*.html'])
+  return gulp.src(['./templates/pages/en/*.html'])
       .pipe(twig({
           functions: [
               {
@@ -144,6 +145,70 @@ gulp.task('twig-es', function () {
       .pipe(gulp.dest('./dist/es/'));
 });
 
+// Task to compile Twig files for posts
+gulp.task('twig-posts', function () {
+  return gulp.src('./templates/posts/en/**/**/*.html')
+    .pipe(twig({
+      functions: [
+        {
+          name: 'translate', // Name of the translation function
+          func: function (text) {
+            return translate(text, 'en'); // Translate to English by default
+          }
+        },
+        {
+          name: 'reverse_url', // Name of the translation function
+          func: function (text) {
+            return reverse_url(text, 'en'); // Translate to English
+          }
+        }
+      ]
+    }))
+    .pipe(htmlbeautify(htmlbeautify_options))
+    .pipe(gulp.dest(function(file) {
+      // Get the relative path of the source file
+      const relativePath = path.relative('./templates/posts/en/', file.path);
+      // Split the relative path and select only the first two elements (year and month)
+      const [year, month] = relativePath.split(path.sep).slice(0, 2);
+      const fileName = path.basename(file.path);
+      // Construct the destination path
+      const destPath = path.join('./dist/posts/');
+      return destPath;
+    }));
+});
+
+// Task to compile Twig files with translation to Spanish
+gulp.task('twig-posts-es', function () {
+  return gulp.src('./templates/posts/es/**/**/*.html')
+    .pipe(twig({
+      functions: [
+        {
+          name: 'translate', // Name of the translation function
+          func: function (text) {
+            return translate(text, 'es'); // Translate to English by default
+          }
+        },
+        {
+          name: 'reverse_url', // Name of the translation function
+          func: function (text) {
+            return reverse_url(text, 'es'); // Translate to English
+          }
+        }
+      ]
+    }))
+    .pipe(htmlbeautify(htmlbeautify_options))
+    .pipe(gulp.dest(function(file) {
+      // Get the relative path of the source file
+      const relativePath = path.relative('./templates/posts/es/', file.path);
+      // Split the relative path and select only the first two elements (year and month)
+      const [year, month] = relativePath.split(path.sep).slice(0, 2);
+      const fileName = path.basename(file.path);
+      //const newFileName = path.basename(file.path, '.html') + '-output.html';
+      // Construct the destination path
+      const destPath = path.join('./dist/es/posts/');
+      return destPath;
+    }));
+});
 
 
 gulp.task('js', function () {
@@ -192,11 +257,13 @@ gulp.task('build', gulp.series([
   'js_min',
   'twig',
   'twig-es',
+  'twig-posts',
+  'twig-posts-es',
   'copy-assets',
   'copy-css',
   'copy-js',
   'copy-htaccess',
-  'run_shell_script'
+  'run_shell_script',
 ]));
 
 /**
