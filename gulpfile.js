@@ -99,6 +99,31 @@ async function generateOGImage(text, folder, file) {
   await browser.close();
 }
 
+function getAllSubfolders(dirPath) {
+  // Get all items (files and folders) in the directory
+  const items = fs.readdirSync(dirPath);
+
+  // Initialize an array to store subfolders
+  const subfolders = [];
+
+  // Iterate through each item
+  items.forEach(item => {
+      // Get the full path of the item
+      const itemPath = path.join(dirPath, item);
+
+      // Check if the item is a directory
+      if (fs.statSync(itemPath).isDirectory()) {
+          // If it's a directory, add it to the subfolders array
+          subfolders.push(itemPath);
+
+          // Recursively get subfolders of this directory
+          subfolders.push(...getAllSubfolders(itemPath));
+      }
+  });
+
+  // Return the array of subfolders
+  return subfolders;
+}
 
 // Global options.
 var htmlbeautify_options = {
@@ -280,7 +305,24 @@ gulp.task('twig-posts', function () {
       // Construct the destination path
       const destPath = path.join('./dist/posts/');
       return destPath;
-    }));
+    }))
+    .on('end', function() {
+      const targetDirectory = './dist/posts';
+      const allSubfolders = getAllSubfolders(targetDirectory);
+      // Get last value from array
+      const lastValue = allSubfolders[allSubfolders.length - 1];
+      const convertedPath = lastValue.replace('dist', 'assets').replace('posts', 'posts/en');
+
+      // After processing, read the files in the destination directory and extract page titles
+      fs.readdirSync(lastValue).forEach(file => {
+        if (file.endsWith('.html')) {
+          const content = fs.readFileSync(path.join(lastValue, file), 'utf8');
+          const pageTitle = extractPageTitle(content);
+          console.log(convertedPath);
+          generateOGImage(pageTitle, convertedPath, file.replace('.html', '.png'));
+        }
+      })
+    });
 });
 
 // Task to compile Twig files with translation to Spanish
@@ -309,11 +351,26 @@ gulp.task('twig-posts-es', function () {
       // Split the relative path and select only the first two elements (year and month)
       const [year, month] = relativePath.split(path.sep).slice(0, 2);
       const fileName = path.basename(file.path);
-      //const newFileName = path.basename(file.path, '.html') + '-output.html';
       // Construct the destination path
       const destPath = path.join('./dist/es/posts/');
       return destPath;
-    }));
+    }))
+    .on('end', function() {
+      const targetDirectory = './dist/es/posts';
+      const allSubfolders = getAllSubfolders(targetDirectory);
+      // Get last value from array
+      const lastValue = allSubfolders[allSubfolders.length - 1];
+      const convertedPath = lastValue.replace('dist', 'assets').replace('assets/es/posts/', 'assets/posts/es/');
+
+      // After processing, read the files in the destination directory and extract page titles
+      fs.readdirSync(lastValue).forEach(file => {
+        if (file.endsWith('.html')) {
+          const content = fs.readFileSync(path.join(lastValue, file), 'utf8');
+          const pageTitle = extractPageTitle(content);
+          generateOGImage(pageTitle, convertedPath, file.replace('.html', '.png'));
+        }
+      })
+    });
 });
 
 
