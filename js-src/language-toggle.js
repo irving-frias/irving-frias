@@ -11,8 +11,9 @@ document.addEventListener('DOMContentLoaded', function () {
   const currentUrl = window.location.pathname;
 
   const headerLinks = document.querySelector('#navbarSupportedContent');
+  const footerLinks = document.querySelector('footer');
 
-  const currentLink = headerLinks.querySelector('a[href="' + currentUrl + '"]');
+  const currentLink = document.querySelector('a[href="' + currentUrl + '"]');
 
   let url_translation = currentLink.dataset.translateUrl;
 
@@ -20,6 +21,10 @@ document.addEventListener('DOMContentLoaded', function () {
     headerLinks.querySelectorAll('a').forEach(link => {
       link.classList.remove('active');
     });
+
+    footerLinks.querySelectorAll('a').forEach(link => {
+      link.classList.remove('active');
+    })
 
     currentLink.classList.add('active');
 
