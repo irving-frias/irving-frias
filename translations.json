@@ -60,5 +60,8 @@
   },
   "/faqs": {
     "es": "/es/preguntas-frecuentes"
+  },
+  "Section": {
+    "es": "Sección"
   }
 }
