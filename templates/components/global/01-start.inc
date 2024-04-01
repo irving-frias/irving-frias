@@ -1,7 +1,6 @@
 
 <!DOCTYPE html>
-<html lang="The `{{ translate('en', 'es') }}` code snippet is likely a template tag or variable used in a templating language like Twig or Liquid.
-{{ translate('en', 'es') }}" class="h-100" data-bs-theme="dark">
+<html lang="{{ translate('en', 'es') }}" class="h-100" data-bs-theme="dark">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">

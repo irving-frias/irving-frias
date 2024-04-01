@@ -5,8 +5,6 @@ document.addEventListener('DOMContentLoaded', function () {
   // Get the language toggle button
   const languageToggle = document.querySelector('a.language-toggle');
 
-  console.log(languageToggle);
-
   // Get current url.
   const currentUrl = window.location.pathname;
 
