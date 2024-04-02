@@ -27,7 +27,7 @@
           height: 100%;
 
           &:has(.read-more a:hover) {
-            h3, p {
+            h2, p {
               filter: blur(4px);
             }
 
@@ -38,7 +38,7 @@
             }
           }
 
-          h3{
+          h2{
             margin: 0;
             color: var(--bs-body-bg);
             margin-bottom: 20px;

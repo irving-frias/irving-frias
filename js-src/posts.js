@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let classes = 'col-md-6 col-lg-4';
         data.data.forEach(function (post) {
           if (counter == 0) {
-            classes = 'col-md-6 col-xl-3';
+            classes = 'col-md-6 col-xl-6';
           }
 
           if (counter == 1) {
@@ -33,11 +33,11 @@ document.addEventListener('DOMContentLoaded', function () {
           }
 
           if (counter == 2) {
-            classes = 'col-md-6 col-xl-6';
+            classes = 'col-md-6 col-xl-3';
           }
 
           if (counter == 3) {
-            classes = 'col-md-6 col-xl-6';
+            classes = 'col-md-6 col-xl-3';
           }
 
           if (counter == 4) {
@@ -45,14 +45,14 @@ document.addEventListener('DOMContentLoaded', function () {
           }
 
           if (counter == 5) {
-            classes = 'col-md-6 col-xl-3';
+            classes = 'col-md-6 col-xl-6';
           }
 
           let item = `
             <div class="post ${classes}">
               <div class="post-item h-100">
                 <div class="content">
-                  <h3>${post.title}</h3>
+                  <h2>${post.title}</h2>
 
                   <p>${post.description}</p>
 

@@ -18,6 +18,7 @@ const data            = require('gulp-data');
 const cheerio         = require('gulp-cheerio');
 const paginationator  = require('gulp-paginationator');
 const json            = require('gulp-json');
+const htmlmin         = require('gulp-htmlmin');
 
 //registerFont('assets/fonts/tacobox.ttf', { family: 'tacobox' });
 
@@ -226,6 +227,7 @@ gulp.task('twig', function () {
           ]
       }))
       .pipe(htmlbeautify(htmlbeautify_options))
+      .pipe(htmlmin({ collapseWhitespace: true }))
       .pipe(gulp.dest('./dist/'))
       .on('end', function() {
         // After processing, read the files in the destination directory and extract page titles
@@ -266,6 +268,7 @@ gulp.task('twig-es', function () {
       }))
       .pipe(htmlbeautify(htmlbeautify_options))
       .pipe(gulp.dest('./dist/es/'))
+      .pipe(htmlmin({ collapseWhitespace: true }))
       .on('end', function() {
         // After processing, read the files in the destination directory and extract page titles
         fs.readdirSync('./dist/es/').forEach(file => {
@@ -302,6 +305,7 @@ gulp.task('twig-posts', function () {
       ]
     }))
     .pipe(htmlbeautify(htmlbeautify_options))
+    .pipe(htmlmin({ collapseWhitespace: true }))
     .pipe(gulp.dest(function(file) {
       // Get the relative path of the source file
       const relativePath = path.relative('./templates/posts/en/', file.path);
@@ -354,6 +358,7 @@ gulp.task('twig-posts-es', function () {
       ]
     }))
     .pipe(htmlbeautify(htmlbeautify_options))
+    .pipe(htmlmin({ collapseWhitespace: true }))
     .pipe(gulp.dest(function(file) {
       // Get the relative path of the source file
       const relativePath = path.relative('./templates/posts/es/', file.path);
