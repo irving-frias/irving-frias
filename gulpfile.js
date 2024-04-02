@@ -14,6 +14,10 @@ var i18nExtract       = require('gulp-i18n-extract');
 const fs              = require('fs');
 const path            = require('path');
 const puppeteer       = require('puppeteer');
+const data            = require('gulp-data');
+const cheerio         = require('gulp-cheerio');
+const paginationator  = require('gulp-paginationator');
+const json            = require('gulp-json');
 
 //registerFont('assets/fonts/tacobox.ttf', { family: 'tacobox' });
 
@@ -318,7 +322,6 @@ gulp.task('twig-posts', function () {
         if (file.endsWith('.html')) {
           const content = fs.readFileSync(path.join(lastValue, file), 'utf8');
           const pageTitle = extractPageTitle(content);
-          console.log(convertedPath);
           generateOGImage(pageTitle, convertedPath, file.replace('.html', '.png'));
         }
       })
@@ -373,6 +376,101 @@ gulp.task('twig-posts-es', function () {
     });
 });
 
+let files = [];
+
+gulp.task('pagination', function() {
+  return gulp.src('dist/posts/**/**/*.html')
+    .pipe(cheerio(function ($, file) {
+      // Use the cheerio instance to parse HTML data
+      // For example, to get the title of the post:
+      let title = $('h1').text();
+      let url = $('html').attr('data-slug');
+      let description = $('html').attr('data-description') || '';
+      let date = $('html').attr('data-date') || '';
+      let image = $('html').attr('data-image') || '';
+
+      // Add the parsed data to the file object
+      file.data = {
+          title: title,
+          url: url,
+          description: description,
+          date: date,
+          image: image
+      };
+
+      files.push(file);
+
+      return file.data;
+    }))
+    .on('end', function(e) {
+      // After all files have been processed
+      if (files) {
+        let stories = files.map(file => file.data);
+        let pages = Math.ceil(stories.length / 10);
+
+        if (!fs.existsSync('dist/paginated_json/en/')) {
+          fs.mkdirSync('dist/paginated_json/en/', { recursive: true });
+        }
+
+        for (let i = 0; i < pages; i++) {
+          let pageStories = stories.slice(i * 10, (i + 1) * 10);
+
+
+          fs.writeFileSync(`dist/paginated_json/en/page-${i + 1}.json`, JSON.stringify(pageStories, null, 2));
+        }
+      } else {
+        console.log('No files processed');
+      }
+    });
+});
+
+let files_es = [];
+
+gulp.task('pagination-es', function() {
+  return gulp.src('dist/es/posts/**/**/*.html')
+    .pipe(cheerio(function ($, file) {
+      // Use the cheerio instance to parse HTML data
+      // For example, to get the title of the post:
+      let title = $('h1').text();
+      let url = $('html').attr('data-slug');
+      let description = $('html').attr('data-description') || '';
+      let date = $('html').attr('data-date') || '';
+      let image = $('html').attr('data-image') || '';
+
+      // Add the parsed data to the file object
+      file.data = {
+          title: title,
+          url: url,
+          description: description,
+          date: date,
+          image: image
+      };
+
+      files_es.push(file);
+
+      return file.data;
+    }))
+    .on('end', function(e) {
+      // After all files have been processed
+      if (files_es) {
+        let stories = files_es.map(file => file.data);
+        let pages = Math.ceil(stories.length / 10);
+
+        if (!fs.existsSync('dist/paginated_json/es')) {
+          fs.mkdirSync('dist/paginated_json/es', { recursive: true });
+        }
+
+        for (let i = 0; i < pages; i++) {
+          let pageStories = stories.slice(i * 10, (i + 1) * 10);
+
+
+          fs.writeFileSync(`dist/paginated_json/es/page-${i + 1}.json`, JSON.stringify(pageStories, null, 2));
+        }
+      } else {
+        console.log('No files processed');
+      }
+    });
+});
 
 gulp.task('js', function () {
   return gulp.src([...js_scripts_contrib, ...js_scripts_custom])
@@ -427,6 +525,8 @@ gulp.task('build', gulp.series([
   'copy-js',
   'copy-htaccess',
   'run_shell_script',
+  'pagination',
+  'pagination-es',
 ]));
 
 /**
