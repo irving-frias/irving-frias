@@ -524,6 +524,31 @@ gulp.task('copy-htaccess', function() {
     .pipe(gulp.dest('dist/')); // Copy to the destination folder
 });
 
+gulp.task('copy-favicon', function() {
+  return gulp.src('favicon*.*') // Select all files and subdirectories in the source folder
+    .pipe(gulp.dest('dist/')); // Copy to the destination folder
+});
+
+gulp.task('copy-android-favicon', function() {
+  return gulp.src('android-*.*') // Select all files and subdirectories in the source folder
+    .pipe(gulp.dest('dist/')); // Copy to the destination folder
+});
+
+gulp.task('copy-apple-favicon', function() {
+  return gulp.src('apple-*.*') // Select all files and subdirectories in the source folder
+    .pipe(gulp.dest('dist/')); // Copy to the destination folder
+});
+
+gulp.task('copy-site-manifest', function() {
+  return gulp.src('site.webmanifest') // Select all files and subdirectories in the source folder
+    .pipe(gulp.dest('dist/')); // Copy to the destination folder
+});
+
+gulp.task('copy-about-file', function() {
+  return gulp.src('about.txt') // Select all files and subdirectories in the source folder
+    .pipe(gulp.dest('dist/')); // Copy to the destination folder
+});
+
 
 gulp.task('build', gulp.series([
   'sass',
@@ -538,6 +563,11 @@ gulp.task('build', gulp.series([
   'copy-css',
   'copy-js',
   'copy-htaccess',
+  'copy-favicon',
+  'copy-android-favicon',
+  'copy-apple-favicon',
+  'copy-site-manifest',
+  'copy-about-file',
   'run_shell_script',
   'pagination',
   'pagination-es',

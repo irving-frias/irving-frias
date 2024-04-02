@@ -4,7 +4,7 @@
       
     </div>
 
-    <div class="row">
+    <div class="row pagination-section">
       <div class="col-12">
       <nav aria-label="...">
         <ul class="pagination">

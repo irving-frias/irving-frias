@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
   let post_blocks = posts.querySelector('.posts');
   let pagination = posts.querySelector('.pagination');
   const currentLang = document.querySelector('html').getAttribute('lang');
+  let read_more = currentLang == 'en' ? 'Read more' : 'Leer más';
   const queryPage = parseInt(window.location.search.split('page=')[1], 10) || 1;
 
   let postsFetched = false;
@@ -20,17 +21,54 @@ document.addEventListener('DOMContentLoaded', function () {
     .then(function (data) {
       let posts_data = '';
       if (data.data.length > 0) {
+        let counter = 0;
+        let classes = 'col-md-6 col-lg-4';
         data.data.forEach(function (post) {
+          if (counter == 0) {
+            classes = 'col-md-6 col-xl-3';
+          }
+
+          if (counter == 1) {
+            classes = 'col-md-6 col-xl-3';
+          }
+
+          if (counter == 2) {
+            classes = 'col-md-6 col-xl-6';
+          }
+
+          if (counter == 3) {
+            classes = 'col-md-6 col-xl-6';
+          }
+
+          if (counter == 4) {
+            classes = 'col-md-6 col-xl-3';
+          }
+
+          if (counter == 5) {
+            classes = 'col-md-6 col-xl-3';
+          }
+
           let item = `
-            <div class="post col-md-6 col-lg-4">
-              <div class="post-item">
-                <a href="${post.url}">
-                  <img src="${post.image}" alt="${post.title}" class="img-fluid">
-                </a>
+            <div class="post ${classes}">
+              <div class="post-item h-100">
+                <div class="content">
+                  <h3>${post.title}</h3>
+
+                  <p>${post.description}</p>
+
+                  <div class="read-more">
+                    <a href="${post.url}" class="btn btn-light">${read_more}</a>
+                  </div>
+                </div>
               </div>
             </div>
           `;
 
+          counter++;
+
+          if (counter == 6) {
+            counter = 0;
+          }
           posts_data += item;
         });
       }
