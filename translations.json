@@ -63,5 +63,11 @@
   },
   "Section": {
     "es": "Sección"
+  },
+  "Posts": {
+    "es": "Publicaciones"
+  },
+  "/posts": {
+    "es": "/es/posts"
   }
 }

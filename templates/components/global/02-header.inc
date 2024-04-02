@@ -13,6 +13,10 @@
           <li class="nav-item">
             <a class="nav-link" href="{{ translate('/about', 'es') }}" data-translate-url="{{ reverse_url('/about') }}">{{ translate('About', 'es') }}</a>
           </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="{{ translate('/posts', 'es') }}" data-translate-url="{{ reverse_url('/posts') }}">{{ translate('Posts', 'es') }}</a>
+          </li>
         </ul>
 
         <div class="d-flex">

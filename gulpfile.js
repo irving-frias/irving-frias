@@ -45,15 +45,6 @@ function extractPageTitle(htmlContent) {
 // Function to generate OG image
 async function generateOGImage(text, folder, file) {
   // Launch headless browser
-
-  // Check if the file exists
-  fs.access(`${folder}/${file}`, fs.constants.F_OK, (err) => {
-    if (!err) {
-      console.log(`File ${file} already exists. Skipping...`);
-      return;
-    }
-  });
-
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
 
@@ -142,7 +133,8 @@ var js_scripts_contrib = [
 
 var js_scripts_custom = [
   './js-src/theme-mode.js',
-  './js-src/language-toggle.js'
+  './js-src/language-toggle.js',
+  './js-src/posts.js'
 ];
 
 gulp.task('sass', function () {
@@ -241,7 +233,13 @@ gulp.task('twig', function () {
           if (file.endsWith('.html')) {
             const content = fs.readFileSync(path.join('./dist/', file), 'utf8');
             const pageTitle = extractPageTitle(content);
-            generateOGImage(pageTitle, './assets/pages/en/', file.replace('.html', '.png'));
+
+            // Check if the file exists
+            fs.access(`./assets/pages/en/${file.replace('.html', '.png')}`, fs.constants.F_OK, (err) => {
+              if (err) {
+                generateOGImage(pageTitle, './assets/pages/en/', file.replace('.html', '.png'));
+              }
+            });
           }
         })
       });
@@ -274,7 +272,11 @@ gulp.task('twig-es', function () {
           if (file.endsWith('.html')) {
             const content = fs.readFileSync(path.join('./dist/es/', file), 'utf8');
             const pageTitle = extractPageTitle(content);
-            generateOGImage(pageTitle, './assets/pages/es/', file.replace('.html', '.png'));
+            fs.access(`./assets/pages/es/${file.replace('.html', '.png')}`, fs.constants.F_OK, (err) => {
+              if (err) {
+                generateOGImage(pageTitle, './assets/pages/es/', file.replace('.html', '.png'));
+              }
+            });
           }
         })
       });
@@ -322,7 +324,11 @@ gulp.task('twig-posts', function () {
         if (file.endsWith('.html')) {
           const content = fs.readFileSync(path.join(lastValue, file), 'utf8');
           const pageTitle = extractPageTitle(content);
-          generateOGImage(pageTitle, convertedPath, file.replace('.html', '.png'));
+          fs.access(`${convertedPath}/${file.replace('.html', '.png')}`, fs.constants.F_OK, (err) => {
+            if (err) {
+              generateOGImage(pageTitle, convertedPath, file.replace('.html', '.png'));
+            }
+          });
         }
       })
     });
@@ -370,15 +376,19 @@ gulp.task('twig-posts-es', function () {
         if (file.endsWith('.html')) {
           const content = fs.readFileSync(path.join(lastValue, file), 'utf8');
           const pageTitle = extractPageTitle(content);
-          generateOGImage(pageTitle, convertedPath, file.replace('.html', '.png'));
+          fs.access(`${convertedPath}/${file.replace('.html', '.png')}`, fs.constants.F_OK, (err) => {
+            if (err) {
+              generateOGImage(pageTitle, convertedPath, file.replace('.html', '.png'));
+            }
+          });
         }
       })
     });
 });
 
-let files = [];
-
 gulp.task('pagination', function() {
+  let files = [];
+
   return gulp.src('dist/posts/**/**/*.html')
     .pipe(cheerio(function ($, file) {
       // Use the cheerio instance to parse HTML data
@@ -412,10 +422,11 @@ gulp.task('pagination', function() {
           fs.mkdirSync('dist/paginated_json/en/', { recursive: true });
         }
 
+        // Write page information to pages.json
+        fs.writeFileSync('dist/paginated_json/en/pages.json', JSON.stringify({ pages: pages }));
+
         for (let i = 0; i < pages; i++) {
           let pageStories = stories.slice(i * 10, (i + 1) * 10);
-
-
           fs.writeFileSync(`dist/paginated_json/en/page-${i + 1}.json`, JSON.stringify(pageStories, null, 2));
         }
       } else {
@@ -424,9 +435,9 @@ gulp.task('pagination', function() {
     });
 });
 
-let files_es = [];
-
 gulp.task('pagination-es', function() {
+  let files_es = [];
+
   return gulp.src('dist/es/posts/**/**/*.html')
     .pipe(cheerio(function ($, file) {
       // Use the cheerio instance to parse HTML data
@@ -456,14 +467,15 @@ gulp.task('pagination-es', function() {
         let stories = files_es.map(file => file.data);
         let pages = Math.ceil(stories.length / 10);
 
-        if (!fs.existsSync('dist/paginated_json/es')) {
-          fs.mkdirSync('dist/paginated_json/es', { recursive: true });
+        if (!fs.existsSync('dist/paginated_json/es/')) {
+          fs.mkdirSync('dist/paginated_json/es/', { recursive: true });
         }
+
+        // Write page information to pages.json
+        fs.writeFileSync('dist/paginated_json/es/pages.json', JSON.stringify({ pages: pages }));
 
         for (let i = 0; i < pages; i++) {
           let pageStories = stories.slice(i * 10, (i + 1) * 10);
-
-
           fs.writeFileSync(`dist/paginated_json/es/page-${i + 1}.json`, JSON.stringify(pageStories, null, 2));
         }
       } else {
