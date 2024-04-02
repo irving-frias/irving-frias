@@ -582,7 +582,7 @@ gulp.task('build', gulp.series([
  * Push build to gh-pages
  */
 gulp.task('deploy_gh', function () {
-  return gulp.src("./dist/")
+  return gulp.src("./dist/**/*")
     .pipe(deploy({
       remoteUrl: "git@github.com:irving-frias/irving-frias.git",
       branch: "main"
@@ -590,7 +590,7 @@ gulp.task('deploy_gh', function () {
 });
 
 gulp.task('deploy', gulp.series([
-  'run_shell_script',
+  'build',
   'deploy_gh'
 ]));
 
