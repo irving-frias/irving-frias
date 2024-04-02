@@ -416,18 +416,19 @@ gulp.task('pagination', function() {
       // After all files have been processed
       if (files) {
         let stories = files.map(file => file.data);
-        let pages = Math.ceil(stories.length / 10);
+        let pages = Math.ceil(stories.length / 9);
 
         if (!fs.existsSync('dist/paginated_json/en/')) {
           fs.mkdirSync('dist/paginated_json/en/', { recursive: true });
         }
 
-        // Write page information to pages.json
-        fs.writeFileSync('dist/paginated_json/en/pages.json', JSON.stringify({ pages: pages }));
-
         for (let i = 0; i < pages; i++) {
-          let pageStories = stories.slice(i * 10, (i + 1) * 10);
-          fs.writeFileSync(`dist/paginated_json/en/page-${i + 1}.json`, JSON.stringify(pageStories, null, 2));
+          let pageStories = stories.slice(i * 9, (i + 1) * 9);
+          let object = {
+            data: pageStories,
+            pages: pages
+          }
+          fs.writeFileSync(`dist/paginated_json/en/page-${i + 1}.json`, JSON.stringify(object, null, 2));
         }
       } else {
         console.log('No files processed');
@@ -465,18 +466,19 @@ gulp.task('pagination-es', function() {
       // After all files have been processed
       if (files_es) {
         let stories = files_es.map(file => file.data);
-        let pages = Math.ceil(stories.length / 10);
+        let pages = Math.ceil(stories.length / 9);
 
         if (!fs.existsSync('dist/paginated_json/es/')) {
           fs.mkdirSync('dist/paginated_json/es/', { recursive: true });
         }
 
-        // Write page information to pages.json
-        fs.writeFileSync('dist/paginated_json/es/pages.json', JSON.stringify({ pages: pages }));
-
         for (let i = 0; i < pages; i++) {
-          let pageStories = stories.slice(i * 10, (i + 1) * 10);
-          fs.writeFileSync(`dist/paginated_json/es/page-${i + 1}.json`, JSON.stringify(pageStories, null, 2));
+          let pageStories = stories.slice(i * 9, (i + 1) * 9);
+          let object = {
+            data: pageStories,
+            pages: pages
+          }
+          fs.writeFileSync(`dist/paginated_json/es/page-${i + 1}.json`, JSON.stringify(object, null, 2));
         }
       } else {
         console.log('No files processed');
