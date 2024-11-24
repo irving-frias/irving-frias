@@ -25,7 +25,7 @@
 
 - 📫 How to reach me **irvingfrias41@gmail.com**
 
-- 📄 Know about my experiences [https://irving-frias.netlify.app](https://irving-frias.netlify.app)
+- 📄 Know about my experiences [https://irving-frias.github.io](https://irving-frias.github.io)
 
 <h2 align="left">/* Tools and Technologies */</h2>
 <table>
